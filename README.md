@@ -46,7 +46,7 @@ The SDK was tested with a RICOH THETA V under the following conditions.
 
 #### Hardware
 
-* RICOH THETA V
+* RICOH THETA Z1
 
 #### Firmware
 
