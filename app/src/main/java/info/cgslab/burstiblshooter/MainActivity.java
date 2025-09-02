@@ -105,6 +105,20 @@ public class MainActivity extends PluginActivity implements CameraFragment.CFCal
         notificationAudioShutter();
     }
 
+    /**
+     * Handles post-capture processing for one or more saved files.
+     *
+     * Stops the sensor, normalizes the provided absolute file paths to be relative to
+     * the DCIM directory (so they can be accepted by the media database), updates
+     * the media database with those paths, and—if this call marks the final frame
+     * of a burst—restores the OLED display to the plugin name.
+     *
+     * @param fileUrls an array of absolute file paths produced by the camera; each
+     *                 element will be converted to a DCIM-relative path before
+     *                 calling the media database update routine
+     * @param mIsDone  true when this invocation corresponds to the final image in
+     *                 a burst sequence (triggers OLED reset to plugin name)
+     */
     @Override
     public void onPictureTaken(String[] fileUrls, boolean mIsDone) {
 

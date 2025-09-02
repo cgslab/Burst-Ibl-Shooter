@@ -118,6 +118,23 @@ public class CameraFragment extends Fragment {
 
     private final Camera.PictureCallback onJpegPictureCallback = new Camera.PictureCallback() {
 
+        /**
+         * Handles a captured JPEG frame: prepares and writes a corresponding DNG with embedded
+         * sensor and sphere metadata, notifies the host callback, and advances burst state.
+         *
+         * This callback:
+         * - Marks stitching mode and updates internal burst counters/flags.
+         * - Captures attitude and compass-accuracy snapshots into CameraSettings.
+         * - Locates a temporary DNG produced by the camera, copies it to the final DNG path,
+         *   and embeds GPS, sphere, and maker-note EXIF via DngExif.
+         * - Invokes the fragment's CFCallback with the saved file URLs and whether the burst ended.
+         * - When the burst completes, resets capturing/burst state and counters.
+         *
+         * Note: IOExceptions during DNG processing are caught and printed; this method does not throw.
+         *
+         * @param data   the JPEG image data supplied by the camera (unused directly for final DNG)
+         * @param camera the Camera instance that produced the image
+         */
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             mParameters.set("RIC_PROC_STITCHING", "RicStaticStitching");
@@ -298,6 +315,18 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates a timestamped save directory for burst captures and assigns it to SAVEDIR.
+     *
+     * The directory is created under the app-specific external DCIM directory
+     * (getExternalFilesDir(Environment.DIRECTORY_DCIM)). The final path has the form
+     * ".../Burst_IBL_Shooter/BIS_yyyyMMdd_HHmm_ss". Any necessary intermediate
+     * directories are created via File.mkdirs().
+     *
+     * Side effects:
+     * - Updates the instance field SAVEDIR with the created path.
+     * - Attempts to create the directory structure on external storage.
+     */
     public void createDir() {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmm_ss");
         Date date = new Date();
