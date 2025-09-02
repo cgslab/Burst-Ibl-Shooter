@@ -39,8 +39,6 @@ import java.util.List;
 import timber.log.Timber;
 
 public class CameraFragment extends Fragment {
-    public static final String DCIM = Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DCIM).getPath();
     public static final String FILENAME = "fileName";
     public String SAVEDIR = "";
     private SurfaceHolder mSurfaceHolder;
@@ -169,7 +167,7 @@ public class CameraFragment extends Fragment {
              * The following DNG file is output by enabling DNG output and executing still image shooting.
              */
             ///DCIM/0/temp0.dng
-            File dngTempFile = dngTempFile = new File(Environment.getExternalStorageDirectory().getPath() + "/temp" + dngcount + ".dng");
+            File dngTempFile = new File(getContext().getExternalFilesDir(null).getPath() + "/temp" + dngcount + ".dng");
             String dngFileUrl = fileUrl.replace(".JPG", ".DNG");
             fileUrls.add(dngFileUrl);
             /**
@@ -304,7 +302,9 @@ public class CameraFragment extends Fragment {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmm_ss");
         Date date = new Date();
         String dateToStr = dateFormat.format(date);
-        SAVEDIR = DCIM + "/Burst_IBL_Shooter/" + "BIS_" + dateToStr;
+        File dcimDir = getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        String dcimPath = (dcimDir != null) ? dcimDir.getPath() : "";
+        SAVEDIR = dcimPath + "/Burst_IBL_Shooter/" + "BIS_" + dateToStr;
         File newDir = new File(SAVEDIR);
         newDir.mkdirs();
     }
