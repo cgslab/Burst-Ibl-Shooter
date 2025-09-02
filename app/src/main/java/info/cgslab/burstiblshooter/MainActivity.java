@@ -33,6 +33,7 @@ import com.theta360.pluginlibrary.values.LedTarget;
 import com.theta360.pluginlibrary.values.OledDisplay;
 import com.theta360.pluginlibrary.values.TextArea;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,7 +115,8 @@ public class MainActivity extends PluginActivity implements CameraFragment.CFCal
          * specifies the file path or directory path under the DCIM directory.
          * Replace file path because fileUrls has full path set
          */
-        String storagePath = Environment.getExternalStorageDirectory().getPath();
+        File dcimDir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        String storagePath = dcimDir != null ? dcimDir.getParent() : "";
         for (int i = 0; i < fileUrls.length; i++) {
             fileUrls[i] = fileUrls[i].replace(storagePath, "");
         }
