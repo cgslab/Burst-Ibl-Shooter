@@ -105,6 +105,15 @@ public class MainActivity extends PluginActivity implements CameraFragment.CFCal
         notificationAudioShutter();
     }
 
+    /**
+     * 撮影完了時に呼ばれ、センサー停止を通知した上で保存ファイルのパスをDCIM配下の相対パスへ変換し、データベースへ登録する。
+     *
+     * 受け取った fileUrls の各要素はフルパスからアプリ外部ファイルの DCIM 親ディレクトリ部分を取り除いて相対パスに変換され、notificationDatabaseUpdate に渡される。
+     * mIsDone が真のときは OLED 表示をプラグイン名に戻す。
+     *
+     * @param fileUrls 保存済みファイルのフルパス配列（このメソッド内で DCIM 以下の相対パスへ変換される）
+     * @param mIsDone  連射処理の最終ファイルであれば `true`、それ以外は `false`
+     */
     @Override
     public void onPictureTaken(String[] fileUrls, boolean mIsDone) {
 

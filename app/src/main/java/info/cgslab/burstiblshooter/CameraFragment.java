@@ -118,6 +118,16 @@ public class CameraFragment extends Fragment {
 
     private final Camera.PictureCallback onJpegPictureCallback = new Camera.PictureCallback() {
 
+        /**
+         * 撮影された画像データを受け取り、メタデータを付与したDNGファイルを作成してコールバックへ通知する。
+         *
+         * <p>このメソッドは撮影フレームのカウント管理を行い、姿勢センサ値や球体タイプなどの撮影メタデータを設定した上で、
+         * 一時DNGファイルを読み込みメタデータ（GPS、球体情報、メーカー情報）を埋め込んだDNGを出力し、
+         * 登録したコールバックにファイルURL一覧と撮影終了フラグを渡します。撮影セッションの終了時には内部の状態とカウンタをリセットします。</p>
+         *
+         * @param data   撮影されたJPEG画像のバイト配列（未加工の画像データ）
+         * @param camera 呼び出し元のCameraインスタンス（プレビューやパラメータにアクセスするために使用される）
+         */
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             mParameters.set("RIC_PROC_STITCHING", "RicStaticStitching");
@@ -298,6 +308,11 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    /**
+     * アプリの外部ファイル配下（DCIM のサブディレクトリ）にタイムスタンプ付きの保存ディレクトリを作成し、そのパスを SAVEDIR に設定します。
+     *
+     * 作成されるディレクトリの形式は "<external_files_DCIM>/Burst_IBL_Shooter/BIS_yyyyMMdd_HHmm_ss" です。
+     */
     public void createDir() {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmm_ss");
         Date date = new Date();
